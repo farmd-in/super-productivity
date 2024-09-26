@@ -139,33 +139,69 @@ export class OpenProjectApiService {
     workPackageId: number,
     cfg: OpenProjectCfg,
   ): Observable<{ default: boolean; id: number; name: string; position: number }[]> {
+    // return this._sendRequest$(
+    //   {
+    //     method: 'POST',
+    //     url: `${cfg.host}/api/v3/time_entries/form`,
+    //     data: {
+    //       _links: {
+    //         workPackage: {
+    //           href: '/api/v3/work_packages/' + workPackageId,
+    //           title: '',
+    //         },
+    //         self: { href: null },
+    //         // comment: { format: 'plain', raw: null, html: '' },
+    //         // spentOn: '2021-09-20',
+    //         // hours: 'PT1H',
+    //         // activity: { href: '/api/v3/time_entries/activities/1', title: 'Management' },
+    //       },
+    //       id: 'new',
+    //     },
+    //   },
+    //   cfg,
+    // ).pipe(
+    //   map((res: any) => res._embedded.schema.activity._embedded.allowedValues),
+    //   catchError((e) => {
+    //     devError(e);
+    //     return [];
+    //   }),
+    // );
+
     return this._sendRequest$(
       {
-        method: 'POST',
-        url: `${cfg.host}/api/v3/time_entries/form`,
+        method: 'PATCH',
+        url: `${cfg.host}/api/v3/work_packages/${ workPackageId }`,
         data: {
-          _links: {
-            workPackage: {
-              href: '/api/v3/work_packages/' + workPackageId,
-              title: '',
-            },
-            self: { href: null },
-            // comment: { format: 'plain', raw: null, html: '' },
-            // spentOn: '2021-09-20',
-            // hours: 'PT1H',
-            // activity: { href: '/api/v3/time_entries/activities/1', title: 'Management' },
+          // _links: {
+          //   workPackage: {
+          //     href: '/api/v3/work_packages/' + workPackageId,
+          //     title: '',
+          //   },
+          //   self: { href: null },
+          //   // comment: { format: 'plain', raw: null, html: '' },
+          //   // spentOn: '2021-09-20',
+          //   // hours: 'PT1H',
+          //   // activity: { href: '/api/v3/time_entries/activities/1', title: 'Management' },
+          // },
+          // id: 'new',
+          
+          '_type': 'WorkPackage',
+          'status': {
+            'href': '/api/v3/statuses/12',
+            'title': 'Closed',
           },
-          id: 'new',
+          'lockVersion': 0,
         },
       },
       cfg,
     ).pipe(
-      map((res: any) => res._embedded.schema.activity._embedded.allowedValues),
-      catchError((e) => {
-        devError(e);
-        return [];
-      }),
+      // map((res: any) => res._embedded.schema.activity._embedded.allowedValues),
+      // catchError((e) => {
+      //   // devError(e);
+      //   return [];
+      // }),
     );
+
   }
 
   trackTime$({
